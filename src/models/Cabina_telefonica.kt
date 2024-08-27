@@ -1,6 +1,8 @@
 package models
 
 class Cabin(val id: Int) {
+    //al utilizar las lista mutableList nos permite almacenar valores los cuales nos va a servir para poder sacar reporte de
+    //las llamadas
     private val calls = mutableListOf<Call>()
 
     fun registerCall(call: Call) {
@@ -17,7 +19,7 @@ class Cabin(val id: Int) {
     fun reset() {
         calls.clear()
     }
-
+    //esta funcion nos muestra en terminal los valores que van a estar alamacenados en el mutableListOf
     fun getDetailedReport(): String {
         return """
             |--- Reporte de Cabina $id ---

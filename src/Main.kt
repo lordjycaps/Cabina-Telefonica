@@ -1,6 +1,7 @@
 // Main.kt
 package main
 
+import kotlin.random.Random
 import models.Cabin
 import models.Call
 import models.CallType
@@ -22,7 +23,7 @@ import java.util.Scanner
 //    println(cabins[1]?.getDetailedReport())
 //}
 
-fun getConsolidatedReport(cabins: Map<Int, Cabin>): String {
+fun ObtenerInfoCabinas(cabins: Map<Int, Cabin>): String {
 
     val totalCalls = cabins.values.sumOf { it.getTotalCalls() }
     val totalDuration = cabins.values.sumOf { it.getTotalDuration() }
@@ -41,18 +42,11 @@ fun getConsolidatedReport(cabins: Map<Int, Cabin>): String {
 fun main() {
     val scanner = Scanner(System.`in`)
     val cabins = mutableMapOf<Int, Cabin>()
-
-    println("""
-       
-     Ingrese el número de cabinas telefonicas: " 
-        
-    """.trimIndent())
-    val numberOfCabins = scanner.nextInt()
-
+    var numberOfCabins = 1
+    val duration = Random.nextInt(1, 101)  // Genera un número aleatorio entre 1 y 100
     for (i in 1..numberOfCabins) {
         cabins[i] = Cabin(i)
     }
-
     while (true) {
         println(
             """
@@ -64,7 +58,8 @@ fun main() {
             |2. Mostrar información de una cabina
             |3. Mostrar consolidado total
             |4. Reiniciar una cabina
-            |5. Salir
+            |5. Crear Cabina
+            |6. Salir
             |Seleccione una opción:
             |
             |-------------------------------
@@ -78,31 +73,32 @@ fun main() {
                 val cabin = cabins[cabinId]
 
                 if (cabin == null) {
-                    println("Cabina no encontrada, recuerda que son de 1 a ${numberOfCabins}")
+                    println("Cabina no encontrada.")
                     continue
                 }
 
-                println("Ingrese el tipo de llamada ")
-                println("(1. local")
-                println("(2. larga distancia")
-                println("(3. celular")
-                val callTypeInput = scanner.next().uppercase()
+                println("Ingrese el tipo de llamada (LOCAL, LONG_DISTANCE, CELLULAR):")
+                val callTypeInput = scanner.next().uppercase();
+
                 val callType = try {
+                    println(callTypeInput);
                     CallType.valueOf(callTypeInput)
                 } catch (e: IllegalArgumentException) {
+                    println(callTypeInput);
                     println("Tipo de llamada inválido.")
                     continue
                 }
-
-                println("Ingrese la duración de la llamada en minutos:")
-                val duration = scanner.nextInt()
+//cambiar este apartado y que el numero registrado sea por numero aleatorio 1-100--------------------------
+                println("Duración de la llamada en minutos: $duration")
                 if (duration <= 0) {
                     println("Duración inválida.")
                     continue
                 }
 
                 cabin.registerCall(Call(callType, duration))
+                println("\n")
                 println("Llamada registrada exitosamente.")
+                println("\n")
             }
 
             2 -> {
@@ -111,14 +107,14 @@ fun main() {
                 val cabin = cabins[cabinId]
 
                 if (cabin == null) {
-                    println("Cabina no encontrada")
+                    println("Cabina no encontrada.")
                 } else {
                     println(cabin.getDetailedReport())
                 }
             }
 
             3 -> {
-                println(getConsolidatedReport(cabins))
+                println(ObtenerInfoCabinas(cabins))
             }
 
             4 -> {
@@ -134,7 +130,15 @@ fun main() {
                 }
             }
 
-            5 -> {
+            5->{
+                println("¿Cuántas cabinas quiere crear?")
+                val addCabin = scanner.nextInt()
+                numberOfCabins += addCabin
+                for (i in 1..numberOfCabins) {
+                    cabins[i] = Cabin(i)
+                }
+            }
+            6 -> {
                 println("Saliendo de la aplicación.")
                 break
             }
